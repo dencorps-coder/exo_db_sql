@@ -1,0 +1,36 @@
+/* Glbo base */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+h1{
+    text-align: center;
+
+}
+
+header {
+    width: 100%;
+    text-align: center;   /* Centre le texte horizontalement */
+    padding: 1.5em 0;     /* Un peu d’espace autour */
+    background: #333;     /* Optionnel, couleur de fond */
+    color: white;         /* Optionnel, couleur du texte */
+    margin-bottom: 2em;   /* Optionnel, espace sous le header */
+}
+
+
+
+.boxform {
+    display: flex;
+    flex-direction: column; /* en colonne */
+    gap: 1em; /* espace entre les éléments */
+    padding: 2em;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+}
+.boxform > div {
+    display: flex;
+    flex-direction: column;
+
+}
