@@ -9,7 +9,7 @@
     $message = "";
 
     // 4. Je vérifie si le formulaire a été soumis en POST (c'est-à-dire si l'utilisateur a cliqué sur "Se connecter")
-    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if ($_SERVER["REQUEST_METHOD"] === "POST") 
         
         // 5. Je récupère l'email envoyé dans le formulaire, je supprime les espaces et j'échappe les caractères spéciaux HTML
         $email = trim(htmlspecialchars($_POST["email"]) ?? '');
