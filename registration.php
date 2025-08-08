@@ -1,12 +1,14 @@
 <?php
+require_once "config/database.php";
+
 $erreur = [];
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $name = trim(htmlspecialchars($_POST["name"] ?? ''));
+if ($_SERVER["REQUEST_METHOD"] === "POST"){
+    $name = trim(htmlspecialchars($_POST["username"] ?? ''));
     $first_name = trim(htmlspecialchars($_POST["first_name"] ?? ''));
     $mail = trim(htmlspecialchars($_POST["mail"] ?? ''));
     $password = $_POST["password"] ?? '';
-
+}
     // Vérification du nom
     if (empty($name)) {
         $erreur[] = "Le nom doit être rempli";
@@ -29,13 +31,47 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $erreur[] = "L'email doit être rempli";
     } elseif (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
         $erreur[] = "Votre adresse email n'est pas valide";
+
     }
 
     // Vérification du mot de passe
-    if (empty($password)) {
-        $erreur[] = "Le mot de passe doit être rempli";
-    }
+ if (empty($password)) {
+            $erreur[] = "password obligatoire";
+        }elseif ( strlen($password) < 3 ) {
+            $erreur[] = "password trop juste";
 }
+  if (empty($erreur))  {
+
+              //logique de traitement en db
+            $pdo = DbConnexion();
+
+            //verifier si l'adresse mail est utilisé ou non
+            $checkEmail = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+
+            //la methode execute de mon objet pdo execute la request préparée
+            $checkEmail->execute([$mail]);
+
+            //une condition pour vérifier si je recupere quelque chose
+            if ($checkEmail->rowCount() > 0) {
+                $erreur[] = "email déja utilisé";
+            } else {
+                //dans le cas ou tout va bien ! email pas utilisé
+
+                //hashage du mdp avec la fonction password_hash
+                $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+
+                //insertion des données en db
+                // INSERT INTO users (username, email, password)VALUES ("atif","atif@gmail.com","lijezfoifjerlkjf")
+                $insertUser = $pdo->prepare("
+                INSERT INTO users (name,first_name, email, password) 
+                VALUES (?, ?, ?,?)
+                ");
+
+                $insertUser->execute([$name, $mail, $first_name, $hashPassword]);
+
+                $message = "super mega cool vous êtes enregistré $name";
+            }
+            }
 ?>
 
 
@@ -59,6 +95,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <section class="boxform">
         <form action="" method="POST">
+            <?php
+            foreach ($erreur as $error) {
+                    echo $error;
+                }
+                if(!empty($message)) 
+                    echo $message;
+            ?>
+            <div>
+                <label for="username">Pseudo</label>
+                <input type="text" id="username" name="username" placeholder="Entrez votre pseudo" required>
+            </div>
+            <div>
             <div>
                 <label for="name">nom</label>
                 <input type="text" id="name" name="name" required>

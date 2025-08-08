@@ -30,10 +30,5 @@ function DbConnexion() {
     }
 }
 
-// Appel de la fonction pour obtenir l’objet PDO (et donc établir la connexion)
-$pdo = DbConnexion();
-
-// Affiche un message si la connexion a réussi (si on arrive à cette ligne, c’est que la connexion est OK)
-echo "Connexion réussie à la base de données !";
 ?>
 
